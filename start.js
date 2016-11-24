@@ -56,7 +56,6 @@ let mkDir = (oldfilename, newfilename) => { //oldfilename: 被复制的文件名
 
 let copyViews = (oldfilename, newfilename, ext) => {//复制html, css文件
   fs.readFile('./' + oldfilename + '/views/' + oldfilename + '.' + ext, 'utf-8', (err, data) => {
-    console.log(__dirname);
     if (err) {
       console.log(err);
       return;
@@ -82,8 +81,9 @@ let copyTs = (oldfilename, newfilename, ext) => {//复制TS文件
     fileUrl = './' + newfilename + '/' + newfilename + '.' + ext + '.ts';
   }
   fs.readFile(url, 'utf-8', (err, data) => {
+    let replaceDate = replace(oldfilename, newfilename, data);
     fs.mkdir(newfilename, (err) => {
-      fs.writeFile(fileUrl, data, 'utf-8', (err) => {
+      fs.writeFile(fileUrl, replaceDate, 'utf-8', (err) => {
         if (err) {
           console.log(err);
           return;
@@ -93,3 +93,18 @@ let copyTs = (oldfilename, newfilename, ext) => {//复制TS文件
     })
   })
 };
+
+
+let replace = (oldfilename, newfilename ,data) => {
+  let upoldfilename = toUP(oldfilename);
+  let upnewfilename = toUP(newfilename);
+  let down = data.replace(oldfilename, newfilename);
+  return down.replace(upoldfilename, upnewfilename);
+}
+
+let toUP = (filename) => {
+  let up = filename.split('')[0].toUpperCase();
+  let file = filename.split('');
+  file[0] = up;
+  return file.join('');
+}
